@@ -1,6 +1,38 @@
+import { useEffect } from 'react'
 import './App.css'
 
 function App() {
+  useEffect(() => {
+    // טיפול ב-smooth scrolling עם offset לכותרת
+    const handleAnchorClick = (e) => {
+      const href = e.target.getAttribute('href')
+      if (href && href.startsWith('#')) {
+        e.preventDefault()
+        const targetId = href.substring(1)
+        const targetElement = document.getElementById(targetId)
+        if (targetElement) {
+          const headerHeight = 100 // גובה הכותרת
+          const targetPosition = targetElement.offsetTop - headerHeight
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          })
+        }
+      }
+    }
+
+    const links = document.querySelectorAll('a[href^="#"]')
+    links.forEach(link => {
+      link.addEventListener('click', handleAnchorClick)
+    })
+
+    return () => {
+      links.forEach(link => {
+        link.removeEventListener('click', handleAnchorClick)
+      })
+    }
+  }, [])
+
   return (
     <div className="app">
       {/* Header */}
